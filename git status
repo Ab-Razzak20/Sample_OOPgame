@@ -1,0 +1,121 @@
+[33mcommit ff3bcaab4dd1aee25936b4d977a410417fd4f302[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: Ab-Razzak20 <abcrazzak20@gmail.com>
+Date:   Mon Oct 4 16:22:49 2021 +0600
+
+    adding starting project
+
+[1mdiff --git a/play.py b/play.py[m
+[1mnew file mode 100644[m
+[1mindex 0000000..f7e347f[m
+[1m--- /dev/null[m
+[1m+++ b/play.py[m
+[36m@@ -0,0 +1,109 @@[m
+[32m+[m[32mfrom slay.room import Room[m
+[32m+[m[32mfrom slay.character import Enemy, Friend[m
+[32m+[m[32mfrom slay.rpginfo import RPGInfo[m
+[32m+[m[32mfrom slay.item import Item[m
+[32m+[m
+[32m+[m[32mspooky_castle = RPGInfo('The Spooky Castle')[m
+[32m+[m[32mspooky_castle.welcome()[m
+[32m+[m[32mRPGInfo.info()  #staticmethod belongs to the class, not to the object[m
+[32m+[m[32mRPGInfo.author = 'Raz Raza'[m
+[32m+[m
+[32m+[m[32mballroom = Room('Ballroom')[m
+[32m+[m[32mballroom.set_description("A vast room with a shiny wooden floor. Huge candlesticks guard the entrance.")[m
+[32m+[m
+[32m+[m[32mdrawing_room = Room('Drawing Room')[m
+[32m+[m[32mdrawing_room.set_description("A large room with ornate golden decorations on each wall")[m
+[32m+[m
+[32m+[m[32mprayer_hall = Room('Prayer Hall')[m
+[32m+[m[32mprayer_hall.set_description('Place for conducting canonical prayers')[m
+[32m+[m
+[32m+[m[32mprint('There are ' + str(Room.no_of_rooms) + ' rooms to explore.')[m
+[32m+[m
+[32m+[m[32mprayer_hall.link_room(drawing_room, 'East')[m
+[32m+[m[32mdrawing_room.link_room(prayer_hall, 'West')[m
+[32m+[m[32mdrawing_room.link_room(ballroom, 'South')[m
+[32m+[m[32mballroom.link_room(drawing_room, 'North')[m
+[32m+[m
+[32m+[m[32maurora = Friend('Aurora', 'A friendly skeleton')[m
+[32m+[m[32maurora.set_conversation("'Hi, hello there!'")[m
+[32m+[m[32mdrawing_room.set_character(aurora)[m
+[32m+[m
+[32m+[m[32msuperman = Enemy("Superman", "A smelly zombie")[m
+[32m+[m[32msuperman.set_conversation("'Brrlgrh... rgrhl... brains...'")[m
+[32m+[m[32msuperman.set_weakness('Kryptonite')[m
+[32m+[m[32mballroom.set_character(superman)[m
+[32m+[m
+[32m+[m[32mkryptonite = Item('Kryptonite')[m
+[32m+[m[32mkryptonite.set_description('A green, crystalline material originating from Krypton')[m
+[32m+[m[32mballroom.set_item(kryptonite)[m
+[32m+[m
+[32m+[m[32mbook = Item('Book')[m
+[32m+[m[32mbook.set_description("A good book entitled 'Knitting for dummies'")[m
+[32m+[m[32mdrawing_room.set_item(book)[m
+[32m+[m
+[32m+[m
+[32m+[m[32mcurrent_room = prayer_hall[m
+[32m+[m[32mbackpack = []  # to store items[m
+[32m+[m
+[32m+[m[32mdead = False    # to keep track of whether the player is still alive[m
+[32m+[m[32mwhile dead == False:[m
+[32m+[m[32m    print('\n')[m
+[32m+[m[32m    current_room.get_details()[m
+[32m+[m
+[32m+[m[32m    inhabitant = current_room.get_character()[m
+[32m+[m[32m    if inhabitant is not None:[m
+[32m+[m[32m        inhabitant.describe()[m
+[32m+[m
+[32m+[m[32m    item = current_room.get_item()  # assign it to the Room[m
+[32m+[m[32m    if item is not None:[m
+[32m+[m[32m          item.describe()[m
+[32m+[m
+[32m+[m[32m    command = input('-> ')[m
+[32m+[m[32m    if command in ['North', 'East', "West", 'South']:  # check whether a direction was typed[m
+[32m+[m[32m        current_room = current_room.move(command)[m
+[32m+[m
+[32m+[m[32m    elif command == 'Talk':    # Talk to the inhabitant - check whether there is one![m
+[32m+[m[32m        if inhabitant is not None:[m
+[32m+[m[32m            inhabitant.talk()[m
+[32m+[m
+[32m+[m[32m    elif command == 'Fight':[m
+[32m+[m[32m        if inhabitant is not None and isinstance(inhabitant, Enemy): # `isinstance()` -"If the character is an Enemy"[m
+[32m+[m[32m            print('What will you fight with?')[m
+[32m+[m[32m            fight_with = input('-> ')[m
+[32m+[m[32m            if fight_with in backpack:[m
+[32m+[m[32m                # when the player chooses an item to use in a fight,[m
+[32m+[m[32m                # the game checks whether the player actually has an item with that name in their backpack[m
+[32m+[m[32m                if inhabitant.fight(fight_with) == True:[m
+[32m+[m[32m                    print('Hooray! You won the fight!')[m
+[32m+[m[32m                    current_room.set_character(None)[m
+[32m+[m[32m                    if Enemy.enemies_to_defeat == 0:[m
+[32m+[m[32m                        # using a class variable to allow the player to win the game[m
+[32m+[m[32m                        # only after they have defeated a specific number of enemies[m
+[32m+[m[32m                        print('Congratulations, you have vanquished the enemy horde!')[m
+[32m+[m[32m                        dead = True[m
+[32m+[m[32m            else:[m
+[32m+[m[32m                print('Oh Dear! You lost the fight!')[m
+[32m+[m[32m                print('Game Over!')[m
+[32m+[m[32m                dead = True[m
+[32m+[m
+[32m+[m[32m        else:[m
+[32m+[m[32m            print('There is no one to fight with.')[m
+[32m+[m
+[32m+[m[32m    elif command == 'Hug':[m
+[32m+[m[32m        if inhabitant is not None:[m
+[32m+[m[32m            if isinstance(inhabitant, Enemy): # check whether an object is an instance of a particular class[m
+[32m+[m[32m                print("I'd not do that if I were you .. .")[m
+[32m+[m[32m            else:[m
+[32m+[m[32m                inhabitant.hug()[m
+[32m+[m
+[32m+[m[32m        else:[m
+[32m+[m[32m            print('There is no one to hug :/')[m
+[32m+[m
+[32m+[m[32m    elif command == 'Take': # put the name of the current room’s Item into the `backpack`[m
+[32m+[m[32m        if item is not None:[m
+[32m+[m[32m            print('You put the ' + item.get_name() + ' in your backpack')[m
+[32m+[m[32m            backpack.append(item.get_name())[m
+[32m+[m[32m            current_room.set_item(None) # set the Item attribute of the Room to `None`.[m
+[32m+[m
+[32m+[m
+[32m+[m[32mRPGInfo.credits()  # classmethod has access to the class, no to the object[m
