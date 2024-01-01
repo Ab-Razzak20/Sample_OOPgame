@@ -17,4 +17,4 @@ class Item():
         self.description = item_description
 
     def describe(self):
-        print("The [" + self.name + "] is here - " + self.description)
+        print("The [" + self.name + "] is here :- " + self.description)
